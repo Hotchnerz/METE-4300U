@@ -30,16 +30,16 @@ int main (int argc, char **argv)
 
   ROS_INFO("Action server started, sending goal.");
   // send a goal to the action
-  frontier_exploration::ExploreTaskGoal goal;
-  goal.explore_boundary.header.frame_id = "map";
-  goal.explore_boundary.polygon.points;
+  frontier_exploration::ExploreTaskGoal goal1;
+  goal1.explore_boundary.header.frame_id = "map";
+  goal1.explore_boundary.polygon.points;
 
-  goal.explore_center.header.frame_id = "map";
-  goal.explore_center.point.x = 0;
-  goal.explore_center.point.y = 0;
-  goal.explore_center.point.z = 0;
+  goal1.explore_center.header.frame_id = "map";
+  goal1.explore_center.point.x = 0;
+  goal1.explore_center.point.y = 0;
+  goal1.explore_center.point.z = 0;
 
-  unboundEx.sendGoal(goal);
+  unboundEx.sendGoal(goal1);
 
 
   //Subscriber Part of the Node
