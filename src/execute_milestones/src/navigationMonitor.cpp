@@ -5,12 +5,32 @@
 #include <frontier_exploration/ExploreTaskAction.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
-int status = 0;
+//int status = 0;
 int debug = 0;
 
 void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::ConstPtr& msg)
 {
-  status = msg->status.status;
+
+  actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> returnHome("move_base", true);
+  returnHome.waitForServer();
+  move_base_msgs::MoveBaseGoal homeGoal;
+
+  int status = msg->status.status;
+
+  if (status == 3) {
+  ROS_INFO("Exploration Complete. Returning to start position!");
+  homeGoal.target_pose.header.frame_id = "map";
+
+  homeGoal.target_pose.pose.position.x = 0;
+  homeGoal.target_pose.pose.position.y = 0;
+
+  homeGoal.target_pose.pose.orientation.w = 1;
+
+  returnHome.sendGoal(homeGoal);
+
+  } else {
+      ROS_INFO("Navigation Aborted. Error Occured");
+  }
 
   /*if (status == 3) {
   ROS_INFO("Exploration Complete. Returning to start position!");
@@ -25,18 +45,16 @@ int main (int argc, char **argv)
   ros::init(argc, argv, "nav_monitor");
   ros::NodeHandle n;
 
-  //Subscriber Part of the Node
-  ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
 
   // create the action client
   // true causes the client to spin its own thread
   actionlib::SimpleActionClient<frontier_exploration::ExploreTaskAction> unboundEx("explore_server", true);
-  actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> returnHome("move_base", true);
+  //actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> returnHome("move_base", true);
 
   ROS_INFO("Waiting for action server to start.");
   // wait for the action server to start
   unboundEx.waitForServer(); //will wait for infinite time
-  returnHome.waitForServer();
+  //returnHome.waitForServer();
 
   ROS_INFO("Action server started, sending goal.");
   // send a goal to the action
@@ -51,13 +69,15 @@ int main (int argc, char **argv)
 
   unboundEx.sendGoal(frontierGoal);
 
-  move_base_msgs::MoveBaseGoal homeGoal;
+  //move_base_msgs::MoveBaseGoal homeGoal;
 
+  //Subscriber Part of the Node
+  ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
 
-  while (debug==0){
+  /*while (debug==0){
     std::cout << "Status: " << status << std::endl;
 
-  }
+  }*/
 
   /*while (status == 0) {
   if (status == 3) {
