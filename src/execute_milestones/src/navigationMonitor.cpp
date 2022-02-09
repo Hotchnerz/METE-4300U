@@ -3,9 +3,22 @@
 #include <frontier_exploration/ExploreTaskActionResult.h>
 #include <frontier_exploration/ExploreTaskAction.h>
 
+void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::ConstPtr& msg)
+{
+  int status = msg->status.status;
+
+  if (status == 3) {
+  ROS_INFO("Exploration Complete. Returning to start position!");
+
+  } else {
+      ROS_INFO("Navigation Aborted. Error Occured");
+  }
+}
+
 int main (int argc, char **argv)
 {
   ros::init(argc, argv, "nav_monitor");
+  ros::NodeHandle n;
 
   // create the action client
   // true causes the client to spin its own thread
@@ -28,6 +41,10 @@ int main (int argc, char **argv)
 
   unboundEx.sendGoal(goal);
 
+
+  //Subscriber Part of the Node
+  ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
+
   
 
   //actionlib_tutorials::FibonacciGoal goal;
@@ -42,8 +59,11 @@ int main (int argc, char **argv)
     actionlib::SimpleClientGoalState state = unboundEx.getState();
     ROS_INFO("Action finished: %s",state.toString().c_str());
   }
-  else
+  else {
     ROS_INFO("Action did not finish before the time out.");
+  }
+
+  ros::spin();
 
   //exit
   return 0;
