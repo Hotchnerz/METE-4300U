@@ -23,6 +23,9 @@ int main (int argc, char **argv)
   ros::init(argc, argv, "nav_monitor");
   ros::NodeHandle n;
 
+  //Subscriber Part of the Node
+  ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
+
   // create the action client
   // true causes the client to spin its own thread
   actionlib::SimpleActionClient<frontier_exploration::ExploreTaskAction> unboundEx("explore_server", true);
@@ -48,6 +51,8 @@ int main (int argc, char **argv)
 
   move_base_msgs::MoveBaseGoal homeGoal;
 
+
+  while (status == 0) {
   if (status == 3) {
   ROS_INFO("Exploration Complete. Returning to start position!");
   homeGoal.target_pose.header.frame_id = "map";
@@ -62,10 +67,10 @@ int main (int argc, char **argv)
   } else {
       ROS_INFO("Navigation Aborted. Error Occured");
   }
+  }
 
 
-  //Subscriber Part of the Node
-  ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
+
 
   
 
