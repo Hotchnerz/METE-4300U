@@ -1,10 +1,12 @@
 #include <ros/ros.h>
+#include <iostream>
 #include <actionlib/client/simple_action_client.h>
 #include <frontier_exploration/ExploreTaskActionResult.h>
 #include <frontier_exploration/ExploreTaskAction.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
 int status = 0;
+int debug = 0;
 
 void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::ConstPtr& msg)
 {
@@ -52,7 +54,12 @@ int main (int argc, char **argv)
   move_base_msgs::MoveBaseGoal homeGoal;
 
 
-  while (status == 0) {
+  while (debug==0){
+    std::cout << "Status: " << status << std::endl;
+
+  }
+
+  /*while (status == 0) {
   if (status == 3) {
   ROS_INFO("Exploration Complete. Returning to start position!");
   homeGoal.target_pose.header.frame_id = "map";
@@ -67,7 +74,7 @@ int main (int argc, char **argv)
   } else {
       ROS_INFO("Navigation Aborted. Error Occured");
   }
-  }
+  }*/
 
 
 
