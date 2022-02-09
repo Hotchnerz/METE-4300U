@@ -1,0 +1,6 @@
+/.catkin_workspace
+/.gitattributes
+/.vscode
+/build
+/devel
+/install_ros_kinetic.sh
