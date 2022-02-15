@@ -90,8 +90,8 @@ int main (int argc, char **argv)
   //move_base_msgs::MoveBaseGoal homeGoal;
 
   //Subscriber Part of the Node
-  ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
-  ros::Subscriber sub = n2.subscribe("move_base/result", 10, homeStatusCallback);
+  ros::Subscriber nav_sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
+  ros::Subscriber home_sub = n2.subscribe("move_base/result", 10, homeStatusCallback);
 
   /*while (debug==0){
     std::cout << "Status: " << status << std::endl;
