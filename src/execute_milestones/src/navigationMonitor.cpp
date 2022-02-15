@@ -4,6 +4,7 @@
 #include <frontier_exploration/ExploreTaskActionResult.h>
 #include <frontier_exploration/ExploreTaskAction.h>
 #include <move_base_msgs/MoveBaseAction.h>
+#include <move_base_msgs/MoveBaseActionResult.h>
 
 //int status = 0;
 int debug = 0;
@@ -40,10 +41,27 @@ void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::
   }*/
 }
 
+void homeStatusCallback(const move_base_msgs::MoveBaseActionResult::ConstPtr& homemsg)
+{
+
+  move_base_msgs::MoveBaseGoal homeGoal;
+
+  int home_status = homemsg->status.status;
+
+  if (home_status == 3) {
+  ROS_INFO("Milestone Complete. Home Postition Reached");
+
+
+  } else {
+      ROS_INFO("Navigation Mission Aborted. Error Occured While Returning to Home.");
+  }
+}
+
 int main (int argc, char **argv)
 {
   ros::init(argc, argv, "nav_monitor");
   ros::NodeHandle n;
+  ros::NodeHandle n2;
 
 
   // create the action client
@@ -51,12 +69,12 @@ int main (int argc, char **argv)
   actionlib::SimpleActionClient<frontier_exploration::ExploreTaskAction> unboundEx("explore_server", true);
   //actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> returnHome("move_base", true);
 
-  ROS_INFO("Waiting for action server to start.");
+  ROS_INFO("Waiting for explore_server to start.");
   // wait for the action server to start
   unboundEx.waitForServer(); //will wait for infinite time
   //returnHome.waitForServer();
 
-  ROS_INFO("Action server started, sending goal.");
+  ROS_INFO("explore_server started, sending goal.");
   // send a goal to the action
   frontier_exploration::ExploreTaskGoal frontierGoal;
   frontierGoal.explore_boundary.header.frame_id = "map";
@@ -73,6 +91,7 @@ int main (int argc, char **argv)
 
   //Subscriber Part of the Node
   ros::Subscriber sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
+  ros::Subscriber sub = n2.subscribe("move_base/result", 10, homeStatusCallback);
 
   /*while (debug==0){
     std::cout << "Status: " << status << std::endl;
