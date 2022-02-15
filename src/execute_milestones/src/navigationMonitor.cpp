@@ -8,6 +8,7 @@
 
 //int status = 0;
 int debug = 0;
+int nav_status = 0;
 
 void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::ConstPtr& msg)
 {
@@ -16,9 +17,9 @@ void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::
   returnHome.waitForServer();
   move_base_msgs::MoveBaseGoal homeGoal;
 
-  int status = msg->status.status;
+  nav_status = msg->status.status;
 
-  if (status == 3) {
+  if (nav_status == 3) {
   ROS_INFO("Exploration Complete. Returning to start position!");
   homeGoal.target_pose.header.frame_id = "map";
 
@@ -43,17 +44,17 @@ void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::
 
 void homeStatusCallback(const move_base_msgs::MoveBaseActionResult::ConstPtr& homemsg)
 {
-
-  move_base_msgs::MoveBaseGoal homeGoal;
-
   int home_status = homemsg->status.status;
 
+if (nav_status == 3){
   if (home_status == 3) {
-  ROS_INFO("Milestone Complete. Home Postition Reached");
+  ROS_INFO("Milestone Complete. Home Postition Reached.");
 
-
+  } else if (home_status == 0 || home_status == 1 || home_status == 2|| home_status == 4 || home_status == 5 || home_status == 6 || home_status == 7 || home_status == 8 || home_status == 9){
+      ROS_INFO("Home Navigation In Progress. Observe the terminal of slam_launch for navigation updates...");
   } else {
-      ROS_INFO("Navigation Mission Aborted. Error Occured While Returning to Home.");
+      ROS_INFO("Navigation Aborted. Error Occured");
+  }
   }
 }
 
