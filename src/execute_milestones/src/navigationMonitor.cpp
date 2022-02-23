@@ -6,51 +6,73 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <move_base_msgs/MoveBaseActionResult.h>
 
-//int status = 0;
-int debug = 0;
+//Initialize global variables
 int nav_status = 0;
 
+//Subscriber callback for frontier_exploration result
 void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::ConstPtr& msg)
 {
 
+  //Create the action client to send move_base goals
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> returnHome("move_base", true);
+  
+  //Wait for move_base to start
   returnHome.waitForServer();
+
+  //Create a goal message (homeGoal) and set the following parameters for the message type.
   move_base_msgs::MoveBaseGoal homeGoal;
 
+  //Store pointer data of explore_server result integer into nav_status
   nav_status = msg->status.status;
 
-  if (nav_status == 3) {
-  ROS_INFO("Exploration Complete. Returning to start position!");
-  homeGoal.target_pose.header.frame_id = "map";
+  /* For Reference on status meanings
+  actionlib_msgs/GoalStatus status
+  uint8 PENDING=0
+  uint8 ACTIVE=1
+  uint8 PREEMPTED=2
+  uint8 SUCCEEDED=3
+  uint8 ABORTED=4
+  uint8 REJECTED=5
+  uint8 PREEMPTING=6
+  uint8 RECALLING=7
+  uint8 RECALLED=8
+  uint8 LOST=9
+  */
 
+  //Check if nav_status is correct
+  if (nav_status == 3) {
+
+  //Update user on milestone status
+  ROS_INFO("Exploration Complete. Returning to start position!");
+
+  //State point of reference for data to contained in this message and state pose information to be sent over goal
+  homeGoal.target_pose.header.frame_id = "map";
   homeGoal.target_pose.pose.position.x = 0;
   homeGoal.target_pose.pose.position.y = 0;
-
   homeGoal.target_pose.pose.orientation.w = 1;
 
+  //Send goal to move_base
   returnHome.sendGoal(homeGoal);
 
   } else {
+      //If navigation did not complete succesfully, update user on failed milestone
       ROS_INFO("Navigation Aborted. Error Occured");
   }
 
-  /*if (status == 3) {
-  ROS_INFO("Exploration Complete. Returning to start position!");
-
-  } else {
-      ROS_INFO("Navigation Aborted. Error Occured");
-  }*/
 }
 
+//Subscriber callback for move_base result
 void homeStatusCallback(const move_base_msgs::MoveBaseActionResult::ConstPtr& homemsg)
 {
+  //Check if home_status is the correct status, SUCCEED
   int home_status = homemsg->status.status;
 
+//If frontier exploration completed successfully, then update user on milestone status related to returning to inital pose depening on the status flag
 if (nav_status == 3){
   if (home_status == 3) {
   ROS_INFO("Milestone Complete. Home Postition Reached.");
 
-  } else if (home_status == 0 || home_status == 1 || home_status == 2|| home_status == 4 || home_status == 5 || home_status == 6 || home_status == 7 || home_status == 8 || home_status == 9){
+  } else if (home_status == 2){
       ROS_INFO("Home Navigation In Progress. Observe the terminal of slam_launch for navigation updates...");
   } else {
       ROS_INFO("Navigation Aborted. Error Occured");
@@ -64,81 +86,46 @@ int main (int argc, char **argv)
   ros::NodeHandle n;
   ros::NodeHandle n2;
 
-
-  // create the action client
-  // true causes the client to spin its own thread
+  //Create the action client for unbounded exploration
   actionlib::SimpleActionClient<frontier_exploration::ExploreTaskAction> unboundEx("explore_server", true);
-  //actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> returnHome("move_base", true);
 
+  //Wait for explore_server to start
   ROS_INFO("Waiting for explore_server to start.");
-  // wait for the action server to start
-  unboundEx.waitForServer(); //will wait for infinite time
-  //returnHome.waitForServer();
+
+  //will wait for infinite time
+  unboundEx.waitForServer(); 
 
   ROS_INFO("explore_server started, sending goal.");
-  // send a goal to the action
+
+  //Create a goal message (frontierGoal) and set the following parameters for the message type.
   frontier_exploration::ExploreTaskGoal frontierGoal;
+
+  //State point of reference for data to contained in this message
   frontierGoal.explore_boundary.header.frame_id = "map";
+
+  //Send an empty boundary polygon for unbounded exploration
   frontierGoal.explore_boundary.polygon.points;
 
+  //State point of reference for data to contained in this message
   frontierGoal.explore_center.header.frame_id = "map";
+
+
+  //State the initial exploration point in the bounded polygon
+  //This is 0,0,0 as unbounded exploration is performed.
   frontierGoal.explore_center.point.x = 0;
   frontierGoal.explore_center.point.y = 0;
   frontierGoal.explore_center.point.z = 0;
 
+  // send this goal to explore_server
   unboundEx.sendGoal(frontierGoal);
 
-  //move_base_msgs::MoveBaseGoal homeGoal;
 
-  //Subscriber Part of the Node
+  //Subscriber Part of the Node. nav_sub listens to the result topic of explore_server with a message queue size of 10 and calls the explore status callback
+  //home_sub listens to result topic of move_base with the same queue size as nav_sub with a similar callback function
   ros::Subscriber nav_sub = n.subscribe("explore_server/result", 10, exploreStatusCallback);
   ros::Subscriber home_sub = n2.subscribe("move_base/result", 10, homeStatusCallback);
 
-  /*while (debug==0){
-    std::cout << "Status: " << status << std::endl;
-
-  }*/
-
-  /*while (status == 0) {
-  if (status == 3) {
-  ROS_INFO("Exploration Complete. Returning to start position!");
-  homeGoal.target_pose.header.frame_id = "map";
-
-  homeGoal.target_pose.pose.position.x = 0;
-  homeGoal.target_pose.pose.position.y = 0;
-
-  homeGoal.target_pose.pose.orientation.w = 1;
-
-  returnHome.sendGoal(homeGoal);
-
-  } else {
-      ROS_INFO("Navigation Aborted. Error Occured");
-  }
-  }*/
-
-
-
-
-  
-
-  //actionlib_tutorials::FibonacciGoal goal;
-  //goal.order = 20;
-  //ac.sendGoal(goal);
-
-  //wait for the action to return
-  /*bool finished_before_timeout = unboundEx.waitForResult(ros::Duration(30.0));
-
-  if (finished_before_timeout)
-  {
-    actionlib::SimpleClientGoalState state = unboundEx.getState();
-    ROS_INFO("Action finished: %s",state.toString().c_str());
-  }
-  else {
-    ROS_INFO("Action did not finish before the time out.");
-  } */
-
   ros::spin();
 
-  //exit
   return 0;
 }

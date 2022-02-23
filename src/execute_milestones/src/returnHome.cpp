@@ -64,3 +64,5 @@ int main(int argc, char **argv)
 
   return 0;
 }
+
+// home_status == 4 || home_status == 5 || home_status == 6 || home_status == 7 || home_status == 8 || home_status == 9
