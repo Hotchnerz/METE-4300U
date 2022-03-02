@@ -55,8 +55,8 @@ void exploreStatusCallback(const frontier_exploration::ExploreTaskActionResult::
   returnHome.sendGoal(homeGoal);
 
   } else {
-      //If navigation did not complete succesfully, update user on failed milestone
-      ROS_INFO("Navigation Aborted. Error Occured");
+      //If navigation did not complete successfully, update user on failed milestone
+      ROS_INFO("Navigation Aborted. Error Occurred");
   }
 
 }
@@ -67,15 +67,15 @@ void homeStatusCallback(const move_base_msgs::MoveBaseActionResult::ConstPtr& ho
   //Check if home_status is the correct status, SUCCEED
   int home_status = homemsg->status.status;
 
-//If frontier exploration completed successfully, then update user on milestone status related to returning to inital pose depening on the status flag
+//If frontier exploration completed successfully, then update user on milestone status related to returning to inital pose depending on the status flag
 if (nav_status == 3){
   if (home_status == 3) {
-  ROS_INFO("Milestone Complete. Home Postition Reached.");
+  ROS_INFO("Milestone Complete. Home Position Reached.");
 
   } else if (home_status == 2){
       ROS_INFO("Home Navigation In Progress. Observe the terminal of slam_launch for navigation updates...");
   } else {
-      ROS_INFO("Navigation Aborted. Error Occured");
+      ROS_INFO("Navigation Aborted. Error Occurred");
   }
   }
 }
