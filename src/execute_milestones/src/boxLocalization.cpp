@@ -1,8 +1,8 @@
 #include <ros/ros.h>
-#include <tf2_ros/transform_listener.h>
+#include <tf/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Twist.h>
-#include <tf2/LinearMath/Quaternion.h>
+//#include <tf2/LinearMath/Quaternion.h>
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "box_localization");
@@ -25,7 +25,7 @@ int main(int argc, char** argv){
   tf2_ros::Buffer tfBuffer;
   tf2_ros::TransformListener tfListener(tfBuffer);
 
-  ros::Rate rate(10.0);
+  //ros::Rate rate(10.0);
   while (node.ok()){
     geometry_msgs::TransformStamped transformStamped;
     try{
@@ -36,31 +36,35 @@ int main(int argc, char** argv){
       ROS_WARN("%s",ex.what());
       ros::Duration(1.0).sleep();
       continue;
-    }
-
-    double x, y, z, q_x, q_y, q_z, q_w = 0;
+    } 
+    
+    double x, y, z, q_x, q_y, q_z, q_w, test = 0;
 
     transformStamped.transform.translation.x = x;
     transformStamped.transform.translation.y = y;
     transformStamped.transform.translation.z = z;
+    
 
     transformStamped.transform.rotation.x = q_x;
     transformStamped.transform.rotation.y = q_y;
     transformStamped.transform.rotation.z = q_z;
     transformStamped.transform.rotation.w = q_w;
 
-    ROS_INFO("Box 1 WRT to Map Origin:");
-    ROS_INFO("-----------------------------------");
-    ROS_INFO("XYZ Coordinates:");
-    ROS_INFO("x: ", x);
-    ROS_INFO("y: ", y);
-    ROS_INFO("z: ", z);
-    ROS_INFO(" ");
-    ROS_INFO("Quaternion Coordinates:");
-    ROS_INFO("x: ", q_x);
-    ROS_INFO("y: ", q_y);
-    ROS_INFO("z: ", q_z);
-    ROS_INFO("z: ", q_w);
+  
+    int time = 3;
+    //std::cout << "Box 1 WRT to Map Origin:" << std::endl;
+    ROS_INFO_THROTTLE(time, "Box 1 WRT to Map Origin:");
+    ROS_INFO_THROTTLE(time, "-----------------------------------");
+    ROS_INFO_THROTTLE(time, "XYZ Coordinates:");
+    ROS_INFO_STREAM_THROTTLE(time, "x: " << x);
+    ROS_INFO_STREAM_THROTTLE(time, "y: " << y);
+    ROS_INFO_STREAM_THROTTLE(time, "z: " << z);
+    ROS_INFO_THROTTLE(time, " ");
+    ROS_INFO_THROTTLE(time, "Quaternion Coordinates:");
+    ROS_INFO_STREAM_THROTTLE(time, "x: " << q_x);
+    ROS_INFO_STREAM_THROTTLE(time, "y: " << q_y);
+    ROS_INFO_STREAM_THROTTLE(time, "z: " << q_z);
+    ROS_INFO_STREAM_THROTTLE(time, "z: " << q_w);
 
 
     /*geometry_msgs::Twist vel_msg;
@@ -70,11 +74,6 @@ int main(int argc, char** argv){
     vel_msg.linear.x = 0.5 * sqrt(pow(transformStamped.transform.translation.x, 2) +
                                   pow(transformStamped.transform.translation.y, 2));
     turtle_vel.publish(vel_msg);*/
-
-    rate.sleep();
-
-    
-
   }
   return 0;
-};
+}

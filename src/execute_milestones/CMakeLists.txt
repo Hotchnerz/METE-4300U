@@ -140,6 +140,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
  add_executable(returnHome_monitor src/returnHome.cpp)
  add_executable(navMonitor_client src/navigationMonitor.cpp)
+ add_executable(box_localization src/boxLocalization.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -159,6 +160,10 @@ include_directories(
  target_link_libraries(returnHome_monitor
    ${catkin_LIBRARIES}
  )
+
+ target_link_libraries(box_localization
+ ${catkin_LIBRARIES}
+)
 
  target_link_libraries(navMonitor_client
  ${catkin_LIBRARIES}
