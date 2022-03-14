@@ -1,26 +1,27 @@
 {
-  "configurations": [
-    {
-      "browse": {
-        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
-        "limitSymbolsToIncludedHeaders": false
-      },
-      "includePath": [
-        "/opt/ros/kinetic/include/**",
-        "/home/mete4300u/catkin_ws/src/execute_milestones/include/**",
-        "/home/mete4300u/catkin_ws/src/m-explore/explore/include/**",
-        "/home/mete4300u/catkin_ws/src/m-explore/map_merge/include/**",
-        "/home/mete4300u/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
-        "/home/mete4300u/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
-        "/home/mete4300u/catkin_ws/src/unbouded_exploration/include/**",
-        "/usr/include/**"
-      ],
-      "name": "ROS",
-      "intelliSenseMode": "gcc-x64",
-      "compilerPath": "/usr/bin/gcc",
-      "cStandard": "gnu11",
-      "cppStandard": "c++14"
-    }
-  ],
-  "version": 4
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "/opt/ros/kinetic/include/**",
+                "/home/mete4300u/catkin_ws/src/execute_milestones/include/**",
+                "/home/mete4300u/catkin_ws/src/m-explore/explore/include/**",
+                "/home/mete4300u/catkin_ws/src/m-explore/map_merge/include/**",
+                "/home/mete4300u/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
+                "/home/mete4300u/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+                "/home/mete4300u/catkin_ws/src/unbouded_exploration/include/**",
+                "/usr/include/**",
+                "/opt/ros/kinetic/include"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
 }
