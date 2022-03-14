@@ -29,7 +29,7 @@ int main(int argc, char** argv){
   while (node.ok()){
     geometry_msgs::TransformStamped transformStamped;
     try{
-      transformStamped = tfBuffer.lookupTransform("map", "marker_id3",
+      transformStamped = tfBuffer.lookupTransform("map", "marker_id5",
                                ros::Time(0));
     }
     catch (tf2::TransformException &ex) {
@@ -63,16 +63,15 @@ int main(int argc, char** argv){
     ROS_INFO("z: ", q_w);
 
 
-
     /*geometry_msgs::Twist vel_msg;
 
     vel_msg.angular.z = 4.0 * atan2(transformStamped.transform.translation.y,
                                     transformStamped.transform.translation.x);
     vel_msg.linear.x = 0.5 * sqrt(pow(transformStamped.transform.translation.x, 2) +
                                   pow(transformStamped.transform.translation.y, 2));
-    turtle_vel.publish(vel_msg);
+    turtle_vel.publish(vel_msg);*/
 
-    rate.sleep(); */
+    rate.sleep();
 
     
 
