@@ -39,7 +39,7 @@ int main(int argc, char** argv){
       continue;
     } 
     
-    double x, y, z, q_x, q_y, q_z, q_w, r, p, y = 0;  
+    double x, y, z, q_x, q_y, q_z, q_w, roll, pitch, yaw = 0;  
 
     transformStamped.transform.translation.x = x;
     transformStamped.transform.translation.y = y;
@@ -53,7 +53,7 @@ int main(int argc, char** argv){
     tf2::Quaternion q(q_x, q_y, q_z, q_w);
     tf2::Matrix3x3 euler(q);
 
-    euler.getRPY(r, p, y);
+    euler.getRPY(roll, pitch, yaw);
 
   
     int time = 3;
@@ -66,9 +66,9 @@ int main(int argc, char** argv){
     ROS_INFO_STREAM_THROTTLE(time, "z: " << z);
     ROS_INFO_THROTTLE(time, " ");
     ROS_INFO_THROTTLE(time, "Orientation in Fixed Euler Angles:");
-    ROS_INFO_STREAM_THROTTLE(time, "Roll: " << r);
-    ROS_INFO_STREAM_THROTTLE(time, "Pitch: " << p);
-    ROS_INFO_STREAM_THROTTLE(time, "Yaw: " << y);
+    ROS_INFO_STREAM_THROTTLE(time, "Roll: " << roll);
+    ROS_INFO_STREAM_THROTTLE(time, "Pitch: " << pitch);
+    ROS_INFO_STREAM_THROTTLE(time, "Yaw: " << yaw);
     //ROS_INFO_STREAM_THROTTLE(time, "z: " << q_w);
 
 
