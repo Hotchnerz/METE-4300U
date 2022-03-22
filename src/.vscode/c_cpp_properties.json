@@ -14,7 +14,9 @@
                 "/home/mete4300u/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
                 "/home/mete4300u/catkin_ws/src/unbouded_exploration/include/**",
                 "/usr/include/**",
-                "/opt/ros/kinetic/include"
+                "/opt/ros/kinetic/include",
+                "/home/mete4300u/catkin_ws/src/m-explore/explore/include/**",
+                "/home/mete4300u/catkin_ws/src/alfons_msgs**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

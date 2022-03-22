@@ -141,6 +141,12 @@ include_directories(
  add_executable(returnHome_monitor src/returnHome.cpp)
  add_executable(navMonitor_client src/navigationMonitor.cpp)
  add_executable(box_localization src/boxLocalization.cpp)
+ add_executable(box1Width src/box1Width.cpp)
+ add_executable(box1Length src/box1Height.cpp)
+ add_executable(box1Height src/box1Length.cpp)
+ add_executable(box2Width src/box2Width.cpp)
+ add_executable(box2Length src/box2Height.cpp)
+ add_executable(box2Height src/box2Length.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -163,6 +169,26 @@ include_directories(
 
  target_link_libraries(box_localization
  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(box1Width
+${catkin_LIBRARIES}
+)
+target_link_libraries(box1Height
+${catkin_LIBRARIES}
+)
+target_link_libraries(box1Length
+${catkin_LIBRARIES}
+)
+
+target_link_libraries(box2Width
+${catkin_LIBRARIES}
+)
+target_link_libraries(box2Height
+${catkin_LIBRARIES}
+)
+target_link_libraries(box2Length
+${catkin_LIBRARIES}
 )
 
  target_link_libraries(navMonitor_client

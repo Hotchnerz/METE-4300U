@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <arg name="box1_width" default="id_3" />
+    <arg name="box1_length" default="id_4" />
+    <arg name="box1_height" default="id_5" />
+
+    <arg name="box2_width" default="id_6" />
+    <arg name="box2_length" default="id_7" />
+    <arg name="box2_height" default="id_8" />
+
+    <arg name="use_arucoBox1" default="True" />
+    <arg name="use_arucoBox2" default="True" />
+
+    <group if="$(arg use_arucoBox1)" >
+        <node pkg="execute_milestones" type="box1Width" name="box1Width" />
+        <node pkg="execute_milestones" type="box1Length" name="box1Length" />
+        <node pkg="execute_milestones" type="box1Height" name="box1Height" />
+
+    </group>
+
+    <group if="$(arg use_arucoBox2)" >
+        <node pkg="execute_milestones" type="box2Width" name="box2Width" />
+        <node pkg="execute_milestones" type="box2Length" name="box2Length" />
+        <node pkg="execute_milestones" type="box2Height" name="box2Height" />
+    </group>
+
+
+</launch>
