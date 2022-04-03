@@ -16,7 +16,12 @@
                 "/usr/include/**",
                 "/opt/ros/kinetic/include",
                 "/home/mete4300u/catkin_ws/src/m-explore/explore/include/**",
-                "/home/mete4300u/catkin_ws/src/alfons_msgs**"
+                "/home/mete4300u/catkin_ws/src/alfons_msgs**",
+                "/home/mete4300u/catkin_ws/src/box_layers/include**",
+                "/home/mete4300u/catkin_ws/src/spiralSearch/action**",
+                "/home/mete4300u/catkin_ws/src/spiralSearch**",
+                "${workspaceFolder}/simple_layers/include",
+                "${workspaceFolder}/simple-layer/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

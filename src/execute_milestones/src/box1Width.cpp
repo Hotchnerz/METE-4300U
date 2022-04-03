@@ -20,7 +20,7 @@ int main(int argc, char** argv){
   while (nh.ok()){
 
     try{
-      transformStamped = tfBuffer.lookupTransform("map", "marker_id5" , ros::Time(0));
+      transformStamped = tfBuffer.lookupTransform("map", "fiducial_5" , ros::Time(0));
     }
     catch (tf2::TransformException &ex) {
       ROS_WARN("%s",ex.what());
