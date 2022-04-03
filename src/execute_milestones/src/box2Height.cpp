@@ -1,33 +1,51 @@
 #include <ros/ros.h>
+
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <visualization_msgs/Marker.h>
+#include <pcl_ros/point_cloud.h>
 
-
-int main(int argc, char** argv){
+int main(int argc, char **argv)
+{
   ros::init(argc, argv, "box2Height");
+  ros::start();
 
   ros::NodeHandle nh;
 
-  ros::Publisher vis_pub = nh.advertise<visualization_msgs::Marker>( "visualization_marker", 0 );
-  
+  ros::Publisher vis_pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 0);
+  ros::Publisher pointCloud_pub = nh.advertise<pcl::PointCloud<pcl::PointXYZ> >("boxScan", 10);
+
   tf2_ros::Buffer tfBuffer;
   tf2_ros::TransformListener tfListener(tfBuffer);
-;
+
   geometry_msgs::TransformStamped transformStamped;
 
   ros::Rate rate(10.0);
-  while (nh.ok()){
+  while (nh.ok())
+  {
 
-    try{
-      transformStamped = tfBuffer.lookupTransform("map", "fiducial_6" , ros::Time(0));
+    try
+    {
+      transformStamped = tfBuffer.lookupTransform("map", "fiducial_6", ros::Time(0));
     }
-    catch (tf2::TransformException &ex) {
-      ROS_WARN("%s",ex.what());
+    catch (tf2::TransformException &ex)
+    {
+      ROS_WARN("%s", ex.what());
       ros::Duration(1.0).sleep();
       continue;
-    } 
-    
+    }
+
+    // create point cloud object
+    pcl::PointCloud<pcl::PointXYZ> arucoCloud;
+
+    arucoCloud.header.frame_id = "/map";
+
+    pcl::PointXYZ arucoPoint;
+    arucoPoint.x = transformStamped.transform.translation.x;
+    arucoPoint.y = transformStamped.transform.translation.y;
+    arucoPoint.z = transformStamped.transform.translation.z;
+    arucoCloud.points.push_back(arucoPoint);
+
     visualization_msgs::Marker marker;
     marker.header.frame_id = "map";
     marker.header.stamp = ros::Time();
@@ -50,11 +68,13 @@ int main(int argc, char** argv){
     marker.color.g = 0.0;
     marker.color.b = 1.0;
 
+    // pcl_conversions::toPCL(ros::Time(), arucoCloud.header.stamp);
 
-    vis_pub.publish( marker );
-
+    pointCloud_pub.publish(arucoCloud.makeShared());
+    vis_pub.publish(marker);
   }
-  //ros::spin();
   rate.sleep();
+  // ros::spin();
+
   return 0;
 }

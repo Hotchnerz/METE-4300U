@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
     try
     {
-      transformStamped = tfBuffer.lookupTransform("map", "fiducial_4", ros::Time(0));
+      transformStamped = tfBuffer.lookupTransform("map", "fiducial_3", ros::Time(0));
     }
     catch (tf2::TransformException &ex)
     {
