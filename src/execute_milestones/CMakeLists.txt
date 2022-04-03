@@ -12,6 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  pcl_conversions
+  pcl_ros
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -111,6 +114,9 @@ catkin_package(
     rospy 
     std_msgs
     frontier_exploration
+    pcl_conversions 
+    pcl_ros 
+    sensor_msgs
 #  DEPENDS system_lib
 )
 
@@ -142,8 +148,8 @@ include_directories(
  add_executable(navMonitor_client src/navigationMonitor.cpp)
  add_executable(box_localization src/boxLocalization.cpp)
  add_executable(box1Width src/box1Width.cpp)
- add_executable(box1Length src/box1Height.cpp)
- add_executable(box1Height src/box1Length.cpp)
+ add_executable(box1Length src/box1Length.cpp)
+ add_executable(box1Height src/box1Height.cpp)
  add_executable(box2Width src/box2Width.cpp)
  add_executable(box2Length src/box2Height.cpp)
  add_executable(box2Height src/box2Length.cpp)
