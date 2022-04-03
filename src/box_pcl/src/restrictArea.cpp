@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <ros/ros.h>
 #include <pcl_ros/point_cloud.h>
+#include <tf2_ros/transform_listener.h>
+#include <geometry_msgs/TransformStamped.h>
 
 int main(int argc, char **argv)
 {
@@ -13,18 +15,33 @@ int main(int argc, char **argv)
     ros::Rate loopRate(1.0);
     std::string topicName = "boxScan";
 
-    ros::Publisher demoPublisher = n.advertise<pcl::PointCloud<pcl::PointXYZ> >(topicName.c_str(),10);
+    ros::Publisher pointCloud_pub = n.advertise<pcl::PointCloud<pcl::PointXYZ> >(topicName.c_str(), 10);
 
     ROS_INFO("Publishing point cloud on topic \"%s\" once every second.", topicName.c_str());
 
+    tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener(tfBuffer);
+
+    geometry_msgs::TransformStamped transformStamped;
 
     while (ros::ok())
     {
+
+        try
+        {
+            transformStamped = tfBuffer.lookupTransform("map", "fiducial_4", ros::Time(0));
+        }
+        catch (tf2::TransformException &ex)
+        {
+            ROS_WARN("%s", ex.what());
+            ros::Duration(1.0).sleep();
+            continue;
+        }
+
         // create point cloud object
-        pcl::PointCloud<pcl::PointXYZ> myCloud;
+        pcl::PointCloud<pcl::PointXYZ> arucoCloud;
 
-        myCloud.header.frame_id = "/map";
-
+        arucoCloud.header.frame_id = "/map";
 
         // fill cloud with random points
         /*for (int v=0; v<1000; ++v)
@@ -36,14 +53,14 @@ int main(int argc, char **argv)
             myCloud.points.push_back(newPoint);
         }*/
 
-            pcl::PointXYZ newPoint;
-            newPoint.x = 0.5;
-            newPoint.y = 0.5;
-            newPoint.z = 0.5;
-            myCloud.points.push_back(newPoint);
+        pcl::PointXYZ arucoPoint;
+        arucoPoint.x = transformStamped.transform.translation.x;
+        arucoPoint.y = transformStamped.transform.translation.y;
+        arucoPoint.z = transformStamped.transform.translation.z;
+        arucoCloud.points.push_back(arucoPoint);
 
         // publish point cloud
-        demoPublisher.publish(myCloud.makeShared());
+        pointCloud_pub.publish(arucoCloud.makeShared());
 
         // pause for loop delay
         loopRate.sleep();
