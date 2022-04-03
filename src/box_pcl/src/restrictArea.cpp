@@ -17,22 +17,30 @@ int main(int argc, char **argv)
 
     ROS_INFO("Publishing point cloud on topic \"%s\" once every second.", topicName.c_str());
 
+
     while (ros::ok())
     {
         // create point cloud object
         pcl::PointCloud<pcl::PointXYZ> myCloud;
 
-        myCloud.header.frame_id = "/base_scan";
+        myCloud.header.frame_id = "/map";
+
 
         // fill cloud with random points
-        for (int v=0; v<1000; ++v)
+        /*for (int v=0; v<1000; ++v)
         {
             pcl::PointXYZ newPoint;
             newPoint.x = (rand() * 100.0) / RAND_MAX;
             newPoint.y = (rand() * 100.0) / RAND_MAX;
             newPoint.z = (rand() * 100.0) / RAND_MAX;
             myCloud.points.push_back(newPoint);
-        }
+        }*/
+
+            pcl::PointXYZ newPoint;
+            newPoint.x = 0.5;
+            newPoint.y = 0.5;
+            newPoint.z = 0.5;
+            myCloud.points.push_back(newPoint);
 
         // publish point cloud
         demoPublisher.publish(myCloud.makeShared());
