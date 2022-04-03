@@ -21,7 +21,8 @@
                 "/home/mete4300u/catkin_ws/src/spiralSearch/action**",
                 "/home/mete4300u/catkin_ws/src/spiralSearch**",
                 "${workspaceFolder}/simple_layers/include",
-                "${workspaceFolder}/simple-layer/include"
+                "${workspaceFolder}/simple-layer/include",
+                "/usr/include/pcl-1.7"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

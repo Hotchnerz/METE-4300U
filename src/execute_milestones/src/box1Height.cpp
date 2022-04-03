@@ -2,14 +2,17 @@
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <visualization_msgs/Marker.h>
+#include <pcl_ros/point_cloud.h>
 
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "box1Height");
+  ros::start();
 
   ros::NodeHandle nh;
 
   ros::Publisher vis_pub = nh.advertise<visualization_msgs::Marker>( "visualization_marker", 0 );
+  ros::Publisher pointCloud_pub = nh.advertise<pcl::PointCloud<pcl::PointXYZ> >("boxScan",10);
   
   tf2_ros::Buffer tfBuffer;
   tf2_ros::TransformListener tfListener(tfBuffer);
@@ -50,8 +53,20 @@ int main(int argc, char** argv){
     marker.color.g = 0.0;
     marker.color.b = 1.0;
 
+    pcl::PointCloud<pcl::PointXYZ> arucoCloud;
+
+     arucoCloud.header.frame_id = "/map";
+
+    pcl::PointXYZ arucoPoint;
+    arucoPoint.x = 0.5;
+    arucoPoint.y = 0.5;
+    arucoPoint.z = 0.5;
+    arucoCloud.points.push_back(arucoPoint);
+
 
     vis_pub.publish( marker );
+    pointCloud_pub.publish(arucoCloud.makeShared());
+
 
   }
   //ros::spin();
